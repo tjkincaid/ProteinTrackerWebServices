@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 
@@ -8,12 +9,12 @@ namespace ProteinTrackerWebServices
     public interface IUserRepository
     {
         void Add(User user);
-        IReadOnlyCollection<User> GetAll();
+        ReadOnlyCollection<User> GetAll();
         User GetById(int id);
         void Save(User UpdateUser);
 
     }
-
+        
     public class UserRepository : IUserRepository
     {
         private static readonly List<User> users = new List<User>();
@@ -26,7 +27,7 @@ namespace ProteinTrackerWebServices
             users.Add(user);
         }
 
-        public IReadOnlyCollection<User> GetAll()
+        public ReadOnlyCollection<User> GetAll()
         {
             return users.AsReadOnly();
         }
@@ -38,10 +39,10 @@ namespace ProteinTrackerWebServices
             {
                 return null;
             }
-            return new User(Goal = user.Goal, Name = user.Name, UserId = user.UserId, Total = user.Total);
+            return new User { Goal = user.Goal, Name = user.Name, UserId = user.UserId, Total = user.Total };
         }
 
-        public void Save(User udateUser)
+        public void Save(User updatedUser)
         {
             var originalUser = users.SingleOrDefault(u => u.UserId == updatedUser.UserId);
             if (originalUser== null)
@@ -49,9 +50,9 @@ namespace ProteinTrackerWebServices
                 return;
             }
 
-            originalUser.Name == updatedUser.Name;
-            originalUser.Total == updatedUser.Total;
-            originalUser.Goal == updatedUser.Goal;
+            originalUser.Name = updatedUser.Name;
+            originalUser.Total = updatedUser.Total;
+            originalUser.Goal = updatedUser.Goal;
 
         }
     }
